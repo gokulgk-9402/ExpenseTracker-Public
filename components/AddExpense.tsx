@@ -1,11 +1,17 @@
 "use client";
 
+import { db } from "@/firebase/config";
+import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
+
+import { v4 as uuidv4 } from "uuid";
 
 const AddExpense = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [category, setCategory] = useState("");
+
+  const [error, setError] = useState("");
 
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("0");
@@ -24,6 +30,31 @@ const AddExpense = () => {
       name: "Bills",
     },
   ]);
+
+  const handleAddExpense = async () => {
+    console.log(amount, desc, category);
+    if (category == "") {
+      setError("Category can't be empty");
+      return;
+    }
+    if (desc == "") {
+      setError("Description can't be empty");
+      return;
+    }
+    if (amount == "") {
+      setError("Amount can't be empty");
+      return;
+    }
+    if (!Number(amount)) {
+      setError("Invalid value for amount");
+      return;
+    }
+    await setDoc(doc(db, "userid-expensens", uuidv4()), {
+      category: 12,
+      amount: Number(amount),
+      desc: desc,
+    });
+  };
 
   return (
     <div className="relative">
@@ -87,6 +118,8 @@ const AddExpense = () => {
         <input
           className=" w-4/5 rounded-2xl px-6 text-base text-slate-200 py-2 bg-slate-700 placeholder-slate-300 border-none outline-none transition-transform duration-200 focus:scale-105 shadow-sm shadow-slate-300 hover:scale-105"
           placeholder="Description"
+          value={desc}
+          onChange={(e) => setDesc(e.target.value)}
         />
         <input
           className=" w-4/5 rounded-2xl px-6 text-base text-slate-200 py-2 bg-slate-700 placeholder-slate-300 border-none outline-none transition-transform duration-200 focus:scale-105 shadow-sm shadow-slate-300 hover:scale-105"
@@ -94,7 +127,10 @@ const AddExpense = () => {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
-        <button className="px-6 py-2 bg-green-600 rounded-lg text-slate-200 hover:bg-green-700">
+        <button
+          className="px-6 py-2 bg-green-600 rounded-lg text-slate-200 hover:bg-green-700"
+          onClick={handleAddExpense}
+        >
           Add
         </button>
       </div>
