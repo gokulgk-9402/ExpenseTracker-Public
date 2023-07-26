@@ -12,6 +12,11 @@ const nextConfig = {
         hostname: "png.pngtree.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+      },
     ],
   },
 };
