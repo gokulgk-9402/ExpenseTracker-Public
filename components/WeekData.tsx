@@ -32,7 +32,7 @@ type CategoryWithAmount = {
   amount: number;
 };
 
-const WeekData: React.FC<Props> = ({ email, weekDataRefresh }) => {
+const WeekData: React.FC<Props> = ({ email = "", weekDataRefresh = false }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesWithAmount, setCategoriesWithAmount] = useState<
     CategoryWithAmount[]

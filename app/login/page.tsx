@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 import Icon from "../../resources/images/rupee.png";
 
@@ -15,7 +15,9 @@ const Login = () => {
   const router = useRouter();
   const user = auth.currentUser;
 
-  if (user != null) return router.push("/");
+  useEffect(() => {
+    if (user != null) return router.push("/");
+  });
 
   const handleGoogleSignIn = () => {
     signInWithPopup(auth, provider)

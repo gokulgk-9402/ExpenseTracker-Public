@@ -8,7 +8,12 @@ type Props = {
   amount: number;
 };
 
-const Category: React.FC<Props> = ({ title, id, color, amount }) => {
+const Category: React.FC<Props> = ({
+  title = "",
+  id = "",
+  color = "",
+  amount = 0,
+}) => {
   return (
     <div className="w-full h-16 py-4 px-6 rounded-md border-b-2 border-slate-200 gap-4 flex flex-row justify-between items-center">
       <div

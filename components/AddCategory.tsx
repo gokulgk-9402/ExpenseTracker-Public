@@ -13,7 +13,11 @@ type Props = {
   setRefresh: Dispatch<SetStateAction<boolean>>;
 };
 
-const AddCategory: React.FC<Props> = ({ email, refresh, setRefresh }) => {
+const AddCategory: React.FC<Props> = ({
+  email = "",
+  refresh = true,
+  setRefresh = () => {},
+}) => {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [title, setTitle] = useState("");
   const [color, setColor] = useState("#FFFFFF");

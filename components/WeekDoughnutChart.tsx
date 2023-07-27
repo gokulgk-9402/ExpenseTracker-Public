@@ -17,7 +17,7 @@ type Props = {
   data: CategoryWithAmount[];
 };
 
-const WeekDoughnutChart: React.FC<Props> = ({ data }) => {
+const WeekDoughnutChart: React.FC<Props> = ({ data = [] }) => {
   const d = {
     labels: data.map((cat) => cat.title),
     showLabels: false,

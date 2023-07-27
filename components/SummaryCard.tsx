@@ -17,9 +17,9 @@ type Expense = {
 };
 
 const SummaryCard: React.FC<Props> = ({
-  email,
-  weekDataRefresh,
-  setWeekDataRefresh,
+  email = "",
+  weekDataRefresh = false,
+  setWeekDataRefresh = () => {},
 }) => {
   const [total, setTotal] = useState(0);
   useEffect(() => {

@@ -8,7 +8,7 @@ interface Props {
   photoURL: string | null;
 }
 
-const Topbar: React.FC<Props> = ({ displayName, photoURL }) => {
+const Topbar: React.FC<Props> = ({ displayName = "", photoURL = "" }) => {
   return (
     <div className=" w-full h-20 flex flex-row items-center justify-between py-4 px-4 md:max-w-2xl">
       <h6 className=" text-slate-400 font-light text-lg">Hi, {displayName}</h6>

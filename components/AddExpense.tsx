@@ -18,9 +18,9 @@ type Props = {
   setWeekDataRefresh: Dispatch<SetStateAction<boolean>>;
 };
 const AddExpense: React.FC<Props> = ({
-  email,
-  weekDataRefresh,
-  setWeekDataRefresh,
+  email = "",
+  weekDataRefresh = true,
+  setWeekDataRefresh = () => {},
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);

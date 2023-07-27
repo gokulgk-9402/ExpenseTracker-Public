@@ -13,24 +13,25 @@ export default function Home() {
   const user = auth.currentUser;
   const router = useRouter();
 
-  const [weekdataRefresh, setWeekDataRefresh] = useState(false);
+  // if (user == null || !user.email) return router.push("/login");
 
   useEffect(() => {
     if (user == null) return router.push("/login");
   });
 
-  if (user == null || !user.email) return;
+  const [weekdataRefresh, setWeekDataRefresh] = useState(false);
 
-  const email = user.email;
+  if (user == null) return;
+
   return (
     <div className=" bg-slate-950 min-h-screen w-full flex flex-col items-center">
       <Topbar displayName={user?.displayName} photoURL={user?.photoURL} />
       <SummaryCard
-        email={email}
+        email={user.email}
         setWeekDataRefresh={setWeekDataRefresh}
         weekDataRefresh={weekdataRefresh}
       />
-      <WeekData email={email} weekDataRefresh={weekdataRefresh} />
+      <WeekData email={user.email} weekDataRefresh={weekdataRefresh} />
       <Stats />
       <Footer />
     </div>
