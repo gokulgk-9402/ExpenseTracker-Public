@@ -1,7 +1,11 @@
 import React from "react";
 import AddExpense from "./AddExpense";
 
-const SummaryCard = () => {
+type Props = {
+  email: string | null;
+};
+
+const SummaryCard: React.FC<Props> = ({ email }) => {
   return (
     <div className="w-[calc(100%-2rem)] h-24 flex flex-row items-center bg-slate-900 mt-10 justify-between py-4 px-6 rounded-2xl md:max-w-5xl md:px-10 hover:bg-slate-800 transition ease-in-out duration-300 hover:scale-[1.02] relative">
       <div>
@@ -10,7 +14,7 @@ const SummaryCard = () => {
           Rs. 5000
         </h1>
       </div>
-      <AddExpense />
+      <AddExpense email={email} />
     </div>
   );
 };

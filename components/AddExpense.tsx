@@ -1,38 +1,35 @@
 "use client";
 
 import { db } from "@/firebase/config";
-import { doc, setDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import { collection, doc, getDocs, query, setDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
-const AddExpense = () => {
+type Category = {
+  title: string;
+  id: string;
+  color: string;
+};
+
+type Props = {
+  email: string | null;
+};
+
+const AddExpense: React.FC<Props> = ({ email }) => {
   const [showModal, setShowModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [category, setCategory] = useState("");
+  const [categoryId, setCategoryId] = useState("");
 
   const [error, setError] = useState("");
 
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("0");
 
-  const [categories, setCategories] = useState([
-    {
-      color: "#FFA0A0",
-      name: "Electronics",
-    },
-    {
-      color: "#A0FFA0",
-      name: "Groceries",
-    },
-    {
-      color: "#A0A0FF",
-      name: "Bills",
-    },
-  ]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const handleAddExpense = async () => {
-    console.log(amount, desc, category);
     if (category == "") {
       setError("Category can't be empty");
       return;
@@ -50,11 +47,35 @@ const AddExpense = () => {
       return;
     }
     await setDoc(doc(db, "userid-expensens", uuidv4()), {
-      category: 12,
+      category: categoryId,
       amount: Number(amount),
       desc: desc,
     });
+
+    setCategory("");
+    setCategoryId("");
+    setDesc("");
+    setAmount("0");
   };
+
+  useEffect(() => {
+    const unsubscribe = async () => {
+      console.log(email);
+      const q = query(collection(db, `${email}-categories`));
+      const querySnapshot = await getDocs(q);
+      let tempCat: Category[] = [];
+      querySnapshot.forEach((doc) =>
+        tempCat.push({
+          id: doc.data().id,
+          title: doc.data().title,
+          color: doc.data().color,
+        })
+      );
+      setCategories(tempCat);
+    };
+
+    unsubscribe();
+  }, [setShowModal]);
 
   return (
     <div className="relative">
@@ -97,11 +118,16 @@ const AddExpense = () => {
             {categories.map((cat, index) => (
               <div
                 className={`w-full text-base text-slate-100 py-2 px-4 hover:bg-slate-500 cursor-pointer flex items-center border-b-2 border-b-slate-100 rounded-2xl
-                    ${category === cat.name ? " bg-slate-500" : ""}
+                    ${category === cat.title ? " bg-slate-500" : ""}
                 `}
                 onClick={() => {
-                  if (category === cat.name) setCategory("");
-                  else setCategory(cat.name);
+                  if (category === cat.title) {
+                    setCategory("");
+                    setCategoryId("");
+                  } else {
+                    setCategory(cat.title);
+                    setCategoryId(cat.id);
+                  }
                   setShowDropdown(false);
                 }}
                 key={index}
@@ -110,7 +136,7 @@ const AddExpense = () => {
                   className={`w-4 h-4 rounded-full mr-2`}
                   style={{ backgroundColor: cat.color }}
                 ></div>
-                {cat.name}
+                {cat.title}
               </div>
             ))}
           </div>

@@ -17,13 +17,14 @@ export default function Home() {
     if (user == null) return router.push("/login");
   });
 
+  if (user == null || !user.email) return;
+
+  const email = user.email;
   return (
     <div className=" bg-slate-950 min-h-screen w-full flex flex-col items-center">
-      {user && (
-        <Topbar displayName={user?.displayName} photoURL={user?.photoURL} />
-      )}
-      <SummaryCard />
-      <WeekData />
+      <Topbar displayName={user?.displayName} photoURL={user?.photoURL} />
+      <SummaryCard email={email} />
+      <WeekData email={email} />
       <Stats />
       <Footer />
     </div>

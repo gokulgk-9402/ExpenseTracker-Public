@@ -1,19 +1,41 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { SketchPicker, BlockPicker, ChromePicker } from "react-color";
 import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/firebase/config";
+import { doc, setDoc } from "firebase/firestore";
 
-const AddCategory = () => {
+type Props = {
+  email: string | null;
+  refresh: boolean;
+  setRefresh: Dispatch<SetStateAction<boolean>>;
+};
+
+const AddCategory: React.FC<Props> = ({ email, refresh, setRefresh }) => {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [title, setTitle] = useState("");
   const [color, setColor] = useState("#FFFFFF");
 
+  const [error, setError] = useState("");
+
   const handleAddCategory = async () => {
-    console.log(title);
-    console.log(color);
+    if (title == "") {
+      setError("Title can't be empty");
+      return;
+    }
+    const categoryId = uuidv4();
+    await setDoc(doc(db, `${email}-categories`, categoryId), {
+      title: title,
+      color: color,
+      id: categoryId,
+    });
+    setRefresh(!refresh);
+
+    setTitle("");
+    setColor("#FFFFFF");
+    setShowCategoryModal(false);
   };
 
   return (
