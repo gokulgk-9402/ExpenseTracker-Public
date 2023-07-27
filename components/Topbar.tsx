@@ -15,7 +15,7 @@ const Topbar: React.FC<Props> = ({ displayName, photoURL }) => {
       <h1 className=" text-slate-200 text-2xl md:3xl md:font-bold">
         Expense Tracker
       </h1>
-      <div className=" h-16 w-16 rounded-full overflow-hidden border-2 border-slate-600 hover:scale-[1.1] transition ease-in-out duration-200 relative">
+      <div className=" h-12 w-12 rounded-full overflow-hidden border-2 border-slate-600 hover:scale-[1.1] transition ease-in-out duration-200 relative">
         <Image
           className=""
           src={photoURL || ""}

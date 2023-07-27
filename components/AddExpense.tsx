@@ -2,7 +2,7 @@
 
 import { db } from "@/firebase/config";
 import { collection, doc, getDocs, query, setDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -14,9 +14,14 @@ type Category = {
 
 type Props = {
   email: string | null;
+  weekDataRefresh: boolean;
+  setWeekDataRefresh: Dispatch<SetStateAction<boolean>>;
 };
-
-const AddExpense: React.FC<Props> = ({ email }) => {
+const AddExpense: React.FC<Props> = ({
+  email,
+  weekDataRefresh,
+  setWeekDataRefresh,
+}) => {
   const [showModal, setShowModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [category, setCategory] = useState("");
@@ -46,21 +51,22 @@ const AddExpense: React.FC<Props> = ({ email }) => {
       setError("Invalid value for amount");
       return;
     }
-    await setDoc(doc(db, "userid-expensens", uuidv4()), {
+    await setDoc(doc(db, `${email}-expenses`, uuidv4()), {
       category: categoryId,
       amount: Number(amount),
       desc: desc,
     });
 
+    setWeekDataRefresh(!weekDataRefresh);
     setCategory("");
     setCategoryId("");
     setDesc("");
     setAmount("0");
+    setShowModal(false);
   };
 
   useEffect(() => {
     const unsubscribe = async () => {
-      console.log(email);
       const q = query(collection(db, `${email}-categories`));
       const querySnapshot = await getDocs(q);
       let tempCat: Category[] = [];
@@ -90,7 +96,7 @@ const AddExpense: React.FC<Props> = ({ email }) => {
           showModal
             ? "opacity-100 translate-y-0 "
             : "opacity-0 pointer-events-none -translate-y-5 "
-        } transition-all ease-in-out duration-300`}
+        } transition-all ease-in-out duration-300 z-10`}
       >
         <button
           className=" bg-red-700 text-slate-100 absolute top-2 right-4 w-7 h-7 rounded-full border-2 border-red-200 flex justify-center items-center"

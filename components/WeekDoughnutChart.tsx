@@ -7,31 +7,25 @@ import { Doughnut } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const WeekDoughnutChart = () => {
-  const data = {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+type CategoryWithAmount = {
+  title: string;
+  id: string;
+  color: string;
+  amount: number;
+};
+type Props = {
+  data: CategoryWithAmount[];
+};
+
+const WeekDoughnutChart: React.FC<Props> = ({ data }) => {
+  const d = {
+    labels: data.map((cat) => cat.title),
     showLabels: false,
     datasets: [
       {
-        label: "# of Votes",
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          "rgba(255, 99, 132)",
-          "rgba(54, 162, 235)",
-          "rgba(255, 206, 86)",
-          "rgba(75, 192, 192)",
-          "rgba(153, 102, 255)",
-          "rgba(255, 159, 64)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
-        borderWidth: 0,
+        label: "Total",
+        data: data.map((cat) => cat.amount),
+        backgroundColor: data.map((cat) => cat.color),
         borderRadius: 10,
       },
     ],
@@ -45,7 +39,7 @@ const WeekDoughnutChart = () => {
     },
     cutout: "50%",
   };
-  return <Doughnut data={data} options={options} />;
+  return <Doughnut data={d} options={options} />;
 };
 
 export default WeekDoughnutChart;

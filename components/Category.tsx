@@ -5,9 +5,10 @@ type Props = {
   title: string;
   id: string;
   color: string;
+  amount: number;
 };
 
-const Category: React.FC<Props> = ({ title, id, color }) => {
+const Category: React.FC<Props> = ({ title, id, color, amount }) => {
   return (
     <div className="w-full h-16 py-4 px-6 rounded-md border-b-2 border-slate-200 gap-4 flex flex-row justify-between items-center">
       <div
@@ -16,7 +17,7 @@ const Category: React.FC<Props> = ({ title, id, color }) => {
       ></div>
       <div className="flex justify-between flex-1 px-2">
         <div className=" text-slate-300 text-xl">{title}</div>
-        <div className="text-yellow-500 font-thin text-lg">Rs. 2000</div>
+        <div className="text-yellow-500 font-thin text-lg">Rs. {amount}</div>
       </div>
       <button className="p-1 text-2xl text-white hover:bg-slate-600 rounded-md">
         <AiOutlineMore />
