@@ -1,7 +1,14 @@
 "use client";
 
 import { db } from "@/firebase/config";
-import { collection, doc, getDocs, query, setDoc } from "firebase/firestore";
+import {
+  Timestamp,
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+} from "firebase/firestore";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
@@ -55,6 +62,7 @@ const AddExpense: React.FC<Props> = ({
       category: categoryId,
       amount: Number(amount),
       desc: desc,
+      addedAt: Timestamp.now(),
     });
 
     setWeekDataRefresh(!weekDataRefresh);
@@ -81,7 +89,7 @@ const AddExpense: React.FC<Props> = ({
     };
 
     unsubscribe();
-  }, [setShowModal]);
+  }, [showModal]);
 
   return (
     <div className="relative">

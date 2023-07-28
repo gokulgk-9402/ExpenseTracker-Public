@@ -4,7 +4,13 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Category from "./Category";
 import WeekDataDoughnutChart from "./WeekDoughnutChart";
 import AddCategory from "./AddCategory";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  Timestamp,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "@/firebase/config";
 
 type Props = {
@@ -55,17 +61,40 @@ const WeekData: React.FC<Props> = ({ email = "", weekDataRefresh = false }) => {
       );
       setCategories(tempCat);
 
+      let weekStart = new Date();
+      console.log(weekStart);
+      weekStart.setSeconds(weekStart.getSeconds() - 86400 * weekStart.getDay());
+      // weekStart = weekStart.getTime() / 1000;
+      // let weekEnd = weekStart + 86400 * 7;
+
+      let weekStartTS = Timestamp.fromDate(weekStart);
+      console.log(weekStartTS);
+      // let weekEnd = weekStart;
+      // weekStart.setSeconds(weekStart.getSeconds() + 86400 * 7);
+      // let weekEndTS = Timestamp.fromDate(weekStart);
+
+      console.log("Start: ", weekStartTS);
+      // console.log("End: ", weekEndTS);
+
+      // const expenseQuery = query(
+      //   collection(db, `${email}-expenses`),
+      //   where("addedAt", ">=", weekStartTS)
+      // );
+
       const expenseQuery = query(collection(db, `${email}-expenses`));
       const expensesSnapshot = await getDocs(expenseQuery);
       let tempExp: Expense[] = [];
-      expensesSnapshot.forEach((doc) =>
+      expensesSnapshot.forEach((doc) => {
+        console.log(doc.data().addedAt);
+        console.log(weekStartTS);
+        console.log(doc.data().addedAt > weekStartTS);
         tempExp.push({
           id: doc.id,
           category: doc.data().category,
           amount: doc.data().amount,
           desc: doc.data().desc,
-        })
-      );
+        });
+      });
       setExpenses(tempExp);
     };
 

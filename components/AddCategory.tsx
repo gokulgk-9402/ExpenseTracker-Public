@@ -5,7 +5,7 @@ import { SketchPicker, BlockPicker, ChromePicker } from "react-color";
 import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/firebase/config";
-import { doc, setDoc } from "firebase/firestore";
+import { Timestamp, doc, setDoc } from "firebase/firestore";
 
 type Props = {
   email: string | null;
@@ -34,6 +34,7 @@ const AddCategory: React.FC<Props> = ({
       title: title,
       color: color,
       id: categoryId,
+      addedAt: Timestamp.now(),
     });
     setRefresh(!refresh);
 
