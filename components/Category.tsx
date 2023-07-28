@@ -17,12 +17,14 @@ const Category: React.FC<Props> = ({
   return (
     <div className="w-full h-16 py-4 px-6 rounded-md border-b-2 border-slate-200 gap-4 flex flex-row justify-between items-center">
       <div
-        className=" w-7 h-7 rounded-full"
+        className=" w-4 h-4 rounded-full"
         style={{ backgroundColor: color }}
       ></div>
-      <div className="flex justify-between flex-1 px-2">
-        <div className=" text-slate-300 text-xl">{title}</div>
-        <div className="text-yellow-500 font-thin text-lg">Rs. {amount}</div>
+      <div className="flex justify-between flex-1 px-2 gap-2 items-center">
+        <div className=" text-slate-300 text-xl flex-1">{title}</div>
+        <div className="text-yellow-500 font-thin text-lg w-16">
+          Rs. {amount}
+        </div>
       </div>
       <button className="p-1 text-2xl text-white hover:bg-slate-600 rounded-md">
         <AiOutlineMore />

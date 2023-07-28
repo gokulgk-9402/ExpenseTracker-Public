@@ -32,7 +32,7 @@ export default function Home() {
         weekDataRefresh={weekdataRefresh}
       />
       <WeekData email={user.email} weekDataRefresh={weekdataRefresh} />
-      <Stats />
+      <Stats email={user.email} refresh={weekdataRefresh} />
       <Footer />
     </div>
   );

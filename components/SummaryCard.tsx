@@ -1,6 +1,12 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import AddExpense from "./AddExpense";
-import { collection, getDocs, query } from "firebase/firestore";
+import {
+  Timestamp,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "@/firebase/config";
 
 type Props = {
@@ -24,7 +30,20 @@ const SummaryCard: React.FC<Props> = ({
   const [total, setTotal] = useState(0);
   useEffect(() => {
     const unsubscribe = async () => {
-      const expenseQuery = query(collection(db, `${email}-expenses`));
+      let weekStart = new Date();
+      weekStart.setHours(0, 0, 0, 0);
+      weekStart.setSeconds(weekStart.getSeconds() - 86400 * weekStart.getDay());
+
+      let weekStartTS = Timestamp.fromDate(weekStart);
+      weekStart.setSeconds(weekStart.getSeconds() + 86400 * 7);
+      let weekEndTS = Timestamp.fromDate(weekStart);
+
+      const expenseQuery = query(
+        collection(db, `${email}-expenses`),
+        where("addedAt", ">=", weekStartTS),
+        where("addedAt", "<", weekEndTS)
+      );
+      // const expenseQuery = query(collection(db, `${email}-expenses`));
       const expensesSnapshot = await getDocs(expenseQuery);
       let tempExp: Expense[] = [];
       expensesSnapshot.forEach((doc) =>
