@@ -89,7 +89,7 @@ const WeekData: React.FC<Props> = ({ email = "", weekDataRefresh = false }) => {
     };
 
     unsubscribe();
-  }, [refresh, weekDataRefresh]);
+  }, [refresh, weekDataRefresh, email]);
 
   useEffect(() => {
     setCategoriesWithAmount(

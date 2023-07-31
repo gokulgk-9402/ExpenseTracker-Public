@@ -60,7 +60,7 @@ const SummaryCard: React.FC<Props> = ({
     };
 
     unsubscribe();
-  }, [weekDataRefresh]);
+  }, [weekDataRefresh, email]);
 
   return (
     <div className="w-[calc(100%-2rem)] h-24 flex flex-row items-center bg-slate-900 mt-10 justify-between py-4 px-6 rounded-2xl md:max-w-5xl md:px-10 hover:bg-slate-800 transition ease-in-out duration-300 relative">

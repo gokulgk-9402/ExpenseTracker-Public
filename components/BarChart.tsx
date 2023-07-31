@@ -57,7 +57,7 @@ const BarChart: React.FC<Props> = ({ data, setCategory, selected }) => {
       },
     },
     barThickness: 30,
-    onClick: (event, elements: any) => {
+    onClick: (event: any, elements: any) => {
       // Check if any element was clicked
       if (elements.length > 0) {
         const clickedBarIndex = elements[0].index;

@@ -140,7 +140,7 @@ const Stats: React.FC<Props> = ({ email, refresh }) => {
     };
 
     unsubscribe();
-  }, [refresh, startTS, endTS]);
+  }, [refresh, startTS, endTS, email]);
 
   useEffect(() => {
     setCategoriesWithAmount(

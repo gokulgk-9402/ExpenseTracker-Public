@@ -89,7 +89,7 @@ const AddExpense: React.FC<Props> = ({
     };
 
     unsubscribe();
-  }, [showModal]);
+  }, [showModal, email]);
 
   return (
     <div className="relative">
