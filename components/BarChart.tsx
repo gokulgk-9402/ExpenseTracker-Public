@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -30,24 +30,11 @@ type CategoryWithAmount = {
 
 type Props = {
   data: CategoryWithAmount[];
+  setCategory: Dispatch<SetStateAction<string>>;
+  selected: string;
 };
 
-const options = {
-  scales: {
-    x: {
-      display: false, // Set display to false to hide the labels under each bar
-    },
-  },
-  responsive: true,
-  plugins: {
-    legend: {
-      display: false,
-    },
-  },
-  barThickness: 30,
-};
-
-const BarChart: React.FC<Props> = ({ data }) => {
+const BarChart: React.FC<Props> = ({ data, setCategory, selected }) => {
   const d = {
     labels: data.map((cat) => cat.title),
     datasets: [
@@ -56,6 +43,31 @@ const BarChart: React.FC<Props> = ({ data }) => {
         backgroundColor: data.map((cat) => cat.color),
       },
     ],
+  };
+  const options = {
+    scales: {
+      x: {
+        display: false, // Set display to false to hide the labels under each bar
+      },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    barThickness: 30,
+    onClick: (event, elements: any) => {
+      // Check if any element was clicked
+      if (elements.length > 0) {
+        const clickedBarIndex = elements[0].index;
+        if (selected == data[clickedBarIndex].id) {
+          setCategory("");
+          return;
+        }
+        setCategory(data[clickedBarIndex].id);
+      }
+    },
   };
 
   return <Bar options={options} data={d} />;

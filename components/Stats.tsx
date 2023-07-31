@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import Category from "./Category";
+import ExpenseItem from "./ExpenseItem";
 
 type Props = {
   email: string | null;
@@ -35,6 +36,14 @@ type CategoryWithAmount = {
   amount: number;
 };
 
+type ExpenseElement = {
+  category: string;
+  color: string;
+  amount: number;
+  desc: string;
+  id: string;
+};
+
 type ChangeTimeline = (tl: string) => void;
 
 const Stats: React.FC<Props> = ({ email, refresh }) => {
@@ -44,6 +53,11 @@ const Stats: React.FC<Props> = ({ email, refresh }) => {
   const [categoriesWithAmount, setCategoriesWithAmount] = useState<
     CategoryWithAmount[]
   >([]);
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategoryName, setSelectedCategoryName] = useState("");
+
+  const [expenseData, setExpenseData] = useState<ExpenseElement[]>([]);
 
   let weekStart = new Date();
   weekStart.setHours(0, 0, 0, 0);
@@ -143,6 +157,42 @@ const Stats: React.FC<Props> = ({ email, refresh }) => {
     );
   }, [categories, expenses]);
 
+  useEffect(() => {
+    let categoriesMap: { [id: string]: Category } = {};
+    for (let category of categories) {
+      categoriesMap[category.id] = category;
+    }
+    if (selectedCategory == "") {
+      setSelectedCategoryName("");
+      setExpenseData(
+        expenses.map((expense) => {
+          return {
+            id: expense.id,
+            category: categoriesMap[expense.category].title,
+            desc: expense.desc,
+            color: categoriesMap[expense.category].color,
+            amount: expense.amount,
+          };
+        })
+      );
+    } else {
+      setSelectedCategoryName(categoriesMap[selectedCategory].title);
+      setExpenseData(
+        expenses
+          .filter((expense) => expense.category == selectedCategory)
+          .map((expense) => {
+            return {
+              id: expense.id,
+              category: categoriesMap[expense.category].title,
+              desc: expense.desc,
+              color: categoriesMap[expense.category].color,
+              amount: expense.amount,
+            };
+          })
+      );
+    }
+  }, [categories, expenses, selectedCategory]);
+
   const handleTimelineClick: ChangeTimeline = (tl) => {
     setTimeline(tl);
   };
@@ -178,10 +228,22 @@ const Stats: React.FC<Props> = ({ email, refresh }) => {
       <div className="w-full h-[calc(100%-8.5rem)] gap-4 flex flex-col  md:max-w-5xl md:flex-row md:px-0 md:h-[40rem]">
         <div className=" w-full h-full md:bg-slate-900 md:rounded-2xl md:w-2/5 overflow-auto p-6">
           <h1 className="text-2xl text-slate-200 md:text-4xl mb-4 font-extralight">
-            Categories
+            Expenses{selectedCategoryName ? ` - ${selectedCategoryName}` : ""}
           </h1>
+          {expenseData.map((expense) => {
+            return (
+              <ExpenseItem
+                category={expense.category}
+                desc={expense.desc}
+                color={expense.color}
+                amount={expense.amount}
+                id={expense.id}
+                key={expense.id}
+              />
+            );
+          })}
 
-          {categoriesWithAmount.map((category) => {
+          {/* {categoriesWithAmount.map((category) => {
             return (
               <Category
                 title={category.title}
@@ -191,13 +253,17 @@ const Stats: React.FC<Props> = ({ email, refresh }) => {
                 amount={category.amount}
               />
             );
-          })}
+          })} */}
         </div>
         <div className=" w-full h-full md:bg-slate-900 md:rounded-2xl md:w-3/5 flex flex-col justify-between p-6 gap-2 md:pb-20">
           <h1 className=" text-2xl font-extralight text-slate-300 md:text-4xl">
-            {timeline}ly Expenses
+            {timeline}ly Expenses Chart
           </h1>
-          <BarChart data={categoriesWithAmount} />
+          <BarChart
+            data={categoriesWithAmount}
+            setCategory={setSelectedCategory}
+            selected={selectedCategory}
+          />
         </div>
       </div>
       {/* <div className=" w-full h-24 bg-slate-700 md:max-w-5xl"></div> */}

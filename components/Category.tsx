@@ -22,7 +22,7 @@ const Category: React.FC<Props> = ({
       ></div>
       <div className="flex justify-between flex-1 px-2 gap-2 items-center">
         <div className=" text-slate-300 text-xl flex-1">{title}</div>
-        <div className="text-yellow-500 font-thin text-lg w-16">
+        <div className=" font-light text-lg w-16" style={{ color: color }}>
           Rs. {amount}
         </div>
       </div>
