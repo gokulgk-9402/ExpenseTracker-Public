@@ -7,32 +7,37 @@ import Stats from "../components/Stats";
 import Footer from "../components/Footer";
 import { auth } from "@/firebase/config";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function Home() {
-  const user = auth.currentUser;
+  // const user = auth.currentUser;
+  const { currentUser } = useContext(AuthContext);
   const router = useRouter();
 
   // if (user == null || !user.email) return router.push("/login");
 
   useEffect(() => {
-    if (user == null) return router.push("/login");
+    if (currentUser == null) return router.push("/login");
   });
 
   const [weekdataRefresh, setWeekDataRefresh] = useState(false);
 
-  if (user == null) return;
+  if (currentUser == null) return;
 
   return (
     <div className=" bg-slate-950 min-h-screen w-full flex flex-col items-center">
-      <Topbar displayName={user?.displayName} photoURL={user?.photoURL} />
+      <Topbar
+        displayName={currentUser?.displayName}
+        photoURL={currentUser?.photoURL}
+      />
       <SummaryCard
-        email={user.email}
+        email={currentUser.email}
         setWeekDataRefresh={setWeekDataRefresh}
         weekDataRefresh={weekdataRefresh}
       />
-      <WeekData email={user.email} weekDataRefresh={weekdataRefresh} />
-      <Stats email={user.email} refresh={weekdataRefresh} />
+      <WeekData email={currentUser.email} weekDataRefresh={weekdataRefresh} />
+      <Stats email={currentUser.email} refresh={weekdataRefresh} />
       <Footer />
     </div>
   );

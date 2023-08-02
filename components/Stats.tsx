@@ -4,6 +4,7 @@ import {
   Timestamp,
   collection,
   getDocs,
+  orderBy,
   query,
   where,
 } from "firebase/firestore";
@@ -123,7 +124,8 @@ const Stats: React.FC<Props> = ({ email, refresh }) => {
       const expenseQuery = query(
         collection(db, `${email}-expenses`),
         where("addedAt", ">=", startTS),
-        where("addedAt", "<", endTS)
+        where("addedAt", "<", endTS),
+        orderBy("addedAt", "desc")
       );
 
       const expensesSnapshot = await getDocs(expenseQuery);
@@ -177,23 +179,24 @@ const Stats: React.FC<Props> = ({ email, refresh }) => {
       );
     } else {
       setSelectedCategoryName(categoriesMap[selectedCategory].title);
-      setExpenseData(
-        expenses
-          .filter((expense) => expense.category == selectedCategory)
-          .map((expense) => {
-            return {
-              id: expense.id,
-              category: categoriesMap[expense.category].title,
-              desc: expense.desc,
-              color: categoriesMap[expense.category].color,
-              amount: expense.amount,
-            };
-          })
-      );
+      let tempExpensesData = expenses
+        .filter((expense) => expense.category == selectedCategory)
+        .map((expense) => {
+          return {
+            id: expense.id,
+            category: categoriesMap[expense.category].title,
+            desc: expense.desc,
+            color: categoriesMap[expense.category].color,
+            amount: expense.amount,
+          };
+        });
+
+      setExpenseData(tempExpensesData);
     }
   }, [categories, expenses, selectedCategory]);
 
   const handleTimelineClick: ChangeTimeline = (tl) => {
+    setSelectedCategory("");
     setTimeline(tl);
   };
 

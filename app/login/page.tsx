@@ -2,18 +2,21 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 
 import Icon from "../../resources/images/rupee.png";
 
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { app, auth } from "../../firebase/config";
+import { AuthContext } from "@/context/AuthContext";
 
 const provider = new GoogleAuthProvider();
 
 const Login = () => {
   const router = useRouter();
   const user = auth.currentUser;
+
+  const { setCurrentUser } = useContext(AuthContext);
 
   useEffect(() => {
     if (user != null) return router.push("/");
@@ -23,6 +26,7 @@ const Login = () => {
     signInWithPopup(auth, provider)
       .then((re) => {
         const user = auth.currentUser;
+        setCurrentUser(user);
         return router.push("/");
       })
       .catch((error) => console.log(error));
